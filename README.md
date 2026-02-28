@@ -84,21 +84,6 @@ Request/Session scopes depend on `RequestContextHolder` (`ThreadLocal`). Since `
 
 ---
 
-## Mental Model Summary
-
-- Singleton holds a proxy.
-- Proxy asks: "Who is my real target right now?"
-- For Request/Session: Looks inside `ThreadLocal`-bound request context.
-- For Prototype: Just asks container for a new instance.
-- For Async: `ThreadLocal` is empty unless context is propagated.
-
-| Scope | Needs ThreadLocal? | Error without proxy | Works with proxy? | Async safe? |
-| :--- | :--- | :--- | :--- | :--- |
-| Request | Yes | ScopeNotActiveException | Yes | No (needs propagation) |
-| Session | Yes | ScopeNotActiveException | Yes | No (needs propagation) |
-| Prototype | No | No error (Logic Trap) | Yes | Yes |
-
----
 
 ## Relationship to Enterprise Features
 
