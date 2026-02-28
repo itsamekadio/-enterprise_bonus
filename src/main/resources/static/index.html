@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Bank | Enterprise Scope Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --error: #ef4444;
+            --bg: #0f172a;
+            --glass: rgba(30, 41, 59, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background: radial-gradient(circle at top right, #1e1b4b, var(--bg));
+        }
+
+        header {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 2.5rem;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-top: 0.5rem;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(16px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.5;
+        }
+
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+            width: fit-content;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        p {
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        button {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: #fff;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .terminal {
+            margin: 2rem 3rem;
+            background: #000;
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #10b981;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #1e293b;
+        }
+
+        .log-entry {
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .log-time {
+            color: #64748b;
+            margin-right: 1rem;
+        }
+
+        .log-thread {
+            color: var(--primary);
+            margin-right: 1rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #1e293b;
+            margin: 5% auto;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            width: 80%;
+            max-width: 900px;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            color: #94a3b8;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        pre {
+            background: #0f172a;
+            padding: 1.5rem;
+            border-radius: 10px;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="tag">ENTERPRISE SYSTEM v2.5.0</div>
+        <h1>Enterprise Bonus</h1>
+        <p class="subtitle">Deep Dive: Scoped Proxies & ThreadLocal Context Propagation</p>
+    </header>
+
+    <div class="terminal" id="terminal">
+        <div class="log-entry">
+            <span class="log-time">[SYSTEM]</span>
+            <span class="log-thread">READY</span>
+            <span>Awaiting transaction signal...</span>
+        </div>
+    </div>
+
+    <main>
+        <!-- Case 1: Request Scope -->
+        <div class="card">
+            <div class="tag">Case 1: @RequestScope</div>
+            <h2>Audit System</h2>
+            <p>Demonstrates <code>ScopeNotActiveException</code>. A Singleton cannot "find" a request-scoped bean
+                without a Proxy mapping it to the <code>ThreadLocal</code> context.</p>
+            <div class="btn-group">
+                <button class="btn-outline" style="border-color: var(--error); color: var(--error);"
+                    onclick="callApi('/api/bank/broken-request', 'AUDIT-ERR')">Trigger Crash</button>
+                <button class="btn-primary" onclick="callApi('/api/bank/transfer', 'AUDIT-OK')">Fixed (Proxy)</button>
+            </div>
+            <button class="btn-outline" style="margin-top: 1rem; width: 100%; font-size: 0.8rem;"
+                onclick="showCodes('request')">Show Comparison</button>
+        </div>
+
+        <!-- Case 2: Session Scope -->
+        <div class="card">
+            <div class="tag">Case 2: @SessionScope</div>
+            <h2>User Session</h2>
+            <p>Shows how session data is inaccessible without <code>proxyMode</code>. Correct implementation allows
+                shared singletons to access user-specific state.</p>
+            <div class="btn-group">
+                <button class="btn-outline" style="border-color: var(--error); color: var(--error);"
+                    onclick="callApi('/api/bank/broken-session', 'SESS-ERR')">Trigger Crash</button>
+                <button class="btn-primary" onclick="callApi('/api/bank/session', 'SESS-OK')">Fixed (Proxy)</button>
+            </div>
+            <button class="btn-outline" style="margin-top: 1rem; width: 100%; font-size: 0.8rem;"
+                onclick="showCodes('session')">Show Comparison</button>
+        </div>
+
+        <!-- Case 3: Prototype Scope -->
+        <div class="card">
+            <div class="tag">Case 3: Prototype Trap</div>
+            <h2>Fraud Engine</h2>
+            <p><b>The Trap:</b> Without a proxy, the Singleton injects ONE prototype at startup and <i>never</i> asks
+                for a new one. Fixed version gets a fresh bean per call.</p>
+            <div class="btn-group">
+                <button class="btn-outline" style="border-color: #f59e0b; color: #f59e0b;"
+                    onclick="callApi('/api/bank/broken-prototype', 'PROTO-TRAP')">Show Trap</button>
+                <button class="btn-primary" onclick="callApi('/api/bank/transfer', 'PROTO-OK')">Fixed (Proxy)</button>
+            </div>
+            <button class="btn-outline" style="margin-top: 1rem; width: 100%; font-size: 0.8rem;"
+                onclick="showCodes('prototype')">Show Comparison</button>
+        </div>
+
+        <!-- Case 4: @Async Scope -->
+        <div class="card" style="border-color: var(--primary);">
+            <div class="tag">Case 4: @Async ThreadLocal</div>
+            <h2>Async Propagation</h2>
+            <p><b>The Mystery:</b> Threads don't share <code>ThreadLocal</code>. Fixed via <b>Manual</b> context
+                capturing and passing to the worker thread.</p>
+            <div class="btn-group">
+                <button class="btn-outline" style="border-color: var(--error); color: var(--error);"
+                    onclick="callApi('/api/bank/broken-async', 'ASYNC-ERR')">Trigger Fail</button>
+                <button class="btn-primary" style="background: var(--success);"
+                    onclick="callApi('/api/bank/manual-async', 'ASYNC-MAN')">Manual Pass</button>
+            </div>
+            <button class="btn-outline" style="margin-top: 1rem; width: 100%; font-size: 0.8rem;"
+                onclick="showCodes('async')">Show Comparison</button>
+        </div>
+    </main>
+
+    <!-- The Modal -->
+    <div id="codeModal" class="modal">
+        <div class="modal-content" style="max-width: 1100px;">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Enterprise Internal Flow</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                <div>
+                    <h3 style="color: var(--error); margin-bottom: 0.5rem; font-size: 0.9rem;">🔴 THE BROKEN PATTERN
+                        (TRAP)</h3>
+                    <pre id="codeBroken" style="font-size: 0.8rem; border-color: var(--error);"></pre>
+                </div>
+                <div>
+                    <h3 style="color: var(--success); margin-bottom: 0.5rem; font-size: 0.9rem;">🟢 THE FIXED PATTERN
+                        (PROXY)</h3>
+                    <pre id="codeFixed" style="font-size: 0.8rem; border-color: var(--success);"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+
+        function log(msg, thread = 'UI', level = 'info') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            if (level === 'error') entry.style.color = '#ef4444';
+            if (level === 'warn') entry.style.color = '#f59e0b';
+            const time = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="log-time">[${time}]</span><span class="log-thread">${thread}</span><span>${msg}</span>`;
+            terminal.appendChild(entry);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        async function callApi(url, tag) {
+            try {
+                log(`Calling ${url}...`, tag);
+                const res = await fetch(url, { method: url.includes('login') || url.includes('transfer') ? 'POST' : 'GET' });
+                const data = await res.json();
+
+                if (data.error || (data.status === 'Async Error')) {
+                    log(`CRITICAL: ${data.error || data.message}`, tag, 'error');
+                } else if (tag === 'PROTO-TRAP') {
+                    log(`RESULT: ${JSON.stringify(data)}. Note: ID is ALWAYS the same!`, tag, 'warn');
+                } else {
+                    log(`SUCCESS: ${JSON.stringify(data)}`, tag);
+                }
+            } catch (e) {
+                log(`NETWORK ERROR: ${e.message}`, tag, 'error');
+            }
+        }
+
+        function showCodes(type) {
+            const modal = document.getElementById('codeModal');
+            const broken = document.getElementById('codeBroken');
+            const fixed = document.getElementById('codeFixed');
+
+            const database = {
+                request: {
+                    bad: `@RequestScope\npublic class BrokenBean {\n  // No proxyMode!\n}\n\n@Service // Singleton\npublic class MyService {\n  @Lazy BrokenBean b; \n  // Note: We use @Lazy to avoid \n  // startup fail, but it CRASHES \n  // at runtime when called.\n}`,
+                    good: `@RequestScope(proxyMode = TARGET_CLASS)\npublic class SecureLog {\n  // Proxy bridges to ThreadLocal\n  // No @Lazy needed! Safe injection.\n}`
+                },
+                session: {
+                    bad: `@SessionScope\npublic class BrokenBean {\n  // No proxyMode!\n}\n\n@Service\npublic class MyService {\n  @Lazy BrokenSession s; \n  // @Lazy used to bypass \n  // BeanCreationException at startup.\n}`,
+                    good: `@SessionScope(proxyMode = TARGET_CLASS)\npublic class ScopedData {\n  // Proxy resolves current session\n}`
+                },
+                prototype: {
+                    bad: `@Scope("prototype")\npublic class TrappedBean {\n  // Injected ONCE into Singleton\n  // Reuse leads to stale state.\n}`,
+                    good: `@Scope(value="prototype", \n       proxyMode=TARGET_CLASS)\npublic class ProxyBean {\n  // New bean every method call!\n}`
+                },
+                async: {
+                    bad: `@Async\npublic void process() {\n  // Empty ThreadLocal context!\n  auditLog.getId(); // CRASH\n}`,
+                    good: `// MANUAL CONTEXT FIX\npublic void process(Attributes attr) {\n  RequestContextHolder.setAttributes(attr);\n  try {\n    auditLog.getId(); // SUCCESS\n  } finally {\n    RequestContextHolder.resetAttributes();\n  }\n}`
+                }
+            };
+
+            broken.innerText = database[type].bad;
+            fixed.innerText = database[type].good;
+            document.getElementById('modalTitle').innerText = `Comparison: ${type.toUpperCase()} SCOPE`;
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('codeModal').style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('codeModal')) closeModal();
+        }
+    </script>
+</body>
+
+</html>
